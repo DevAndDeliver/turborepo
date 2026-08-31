@@ -1,0 +1,5 @@
+# Replace with the domain (or subdomain) you pointed at this box's public IP.
+# Caddy provisions and renews the TLS certificate for it automatically.
+api.yourdomain.com {
+	reverse_proxy localhost:3001
+}

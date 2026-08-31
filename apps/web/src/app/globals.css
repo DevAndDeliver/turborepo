@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --font-family-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: var(--font-mono), ui-monospace, "Courier New", monospace;
+}
+
+/* Scroll reveal — all [data-animate] elements start hidden */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(1rem) translateZ(0);
+  filter: blur(2px);
+  transition-property: opacity, transform, filter;
+  transition-duration: 0.42s;
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  transition-delay: var(--animate-delay, 0ms);
+}
+
+[data-animate][data-visible] {
+  opacity: 1;
+  transform: translateY(0) translateZ(0);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-animate] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Terminal cursor blink */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Marquee */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee 30s linear infinite reverse;
+}

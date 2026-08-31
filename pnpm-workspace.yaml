@@ -1,0 +1,22 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+# pnpm asks about each dependency with a build script. Leaving a literal
+# "set this to true or false" here makes every install print
+# ERR_PNPM_IGNORED_BUILDS. esbuild needs its build step (vitest and tsx use it).
+allowBuilds:
+  "@scarf/scarf": false
+  esbuild: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - jsdom@30.0.0
+overrides:
+  # transitive: next > postcss > nanoid — infinite-loop DoS (GHSA-2v37-7h3g-55p8)
+  "nanoid@<3.3.18": "^3.3.18"
+  # transitive: @nestjs/swagger > js-yaml — ReDoS in flow collections (GHSA-pm4m-ph32-ghv5)
+  "js-yaml@>=5.0.0 <=5.2.1": "^5.2.2"
+  # dev-only (eslint / @nestjs/cli toolchain — never in the production bundle)
+  "brace-expansion@<1.1.17": "^1.1.17"
+  "brace-expansion@>=4.0.0 <5.0.9": "^5.0.9"
+  "fast-uri@>=3.0.0 <3.1.5": "^3.1.5"
+  "js-yaml@>=4.0.0 <4.3.1": "^4.3.1"

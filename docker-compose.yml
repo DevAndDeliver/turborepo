@@ -1,0 +1,28 @@
+# Dev-mode only (hot reload via bind mounts). Not a production deployment
+# setup — see the "Deploying" section of the README for how both apps ship.
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - apps/web/.env.local
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.dev
+    ports:
+      - "3001:3001"
+    env_file:
+      - apps/api/.env
+    volumes:
+      - .:/app
+      - /app/node_modules

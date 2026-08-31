@@ -1,0 +1,114 @@
+name: Deploy API to VPS
+
+# Manual until proven, then swap in:
+#   on:
+#     push:
+#       branches: [main]
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Branch or tag to deploy"
+        required: true
+        default: main
+
+jobs:
+  deploy:
+    name: SSH deploy apps/api
+    runs-on: ubuntu-latest
+    steps:
+      # An unset secret otherwise surfaces as drone-ssh's "missing server host".
+      - name: Check required secrets
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          missing=""
+          [ -z "$VPS_HOST" ] && missing="$missing VPS_HOST"
+          [ -z "$VPS_USER" ] && missing="$missing VPS_USER"
+          [ -z "$VPS_SSH_KEY" ] && missing="$missing VPS_SSH_KEY"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository secret(s):$missing"
+            echo "Set them as *Repository* secrets under Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          DEPLOY_REF: ${{ inputs.ref }}
+          # Derived from whatever repo this workflow runs in — nothing to edit
+          # on a fork. The box authenticates with a deploy key, hence SSH.
+          DEPLOY_REPO: git@github.com:${{ github.repository }}.git
+          DEPLOY_DIR: ${{ github.event.repository.name }}
+          API_PORT: ${{ vars.API_PORT }}
+          ALLOWED_ORIGIN: ${{ vars.ALLOWED_ORIGIN }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          SITE_NAME: ${{ vars.SITE_NAME }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: DEPLOY_REF,DEPLOY_REPO,DEPLOY_DIR,API_PORT,ALLOWED_ORIGIN,MAIL_FROM,SITE_URL,SITE_NAME,RESEND_API_KEY,RESEND_AUDIENCE_ID
+          script: |
+            set -euo pipefail
+
+            REPO="$DEPLOY_REPO"
+            APP_DIR="$HOME/$DEPLOY_DIR"
+
+            # No prompt to accept the host key in a non-interactive shell.
+            mkdir -p ~/.ssh
+            touch ~/.ssh/known_hosts
+            ssh-keygen -F github.com >/dev/null || ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+
+            # nvm lives in ~/.bashrc, which Ubuntu skips for non-interactive
+            # shells, and sourcing it doesn't select a version. Prefer a system node.
+            if ! command -v node >/dev/null 2>&1; then
+              export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+              if [ -s "$NVM_DIR/nvm.sh" ]; then
+                . "$NVM_DIR/nvm.sh"
+                nvm use default >/dev/null 2>&1 || nvm use node >/dev/null 2>&1 || true
+              fi
+            fi
+            command -v node >/dev/null 2>&1 || {
+              echo "ERROR: no node on PATH. Install one: https://deb.nodesource.com/setup_22.x"
+              exit 1
+            }
+            echo "node $(node -v) at $(command -v node)"
+
+            [ -d "$APP_DIR/.git" ] || git clone "$REPO" "$APP_DIR"
+            cd "$APP_DIR"
+
+            # Reset, not pull: a conflict here would wedge every future deploy.
+            git fetch --prune origin
+            git checkout -B "$DEPLOY_REF" "origin/$DEPLOY_REF"
+            git reset --hard "origin/$DEPLOY_REF"
+
+            # .env is gitignored, so the reset above never touches it.
+            # printf, not a heredoc: values contain spaces and angle brackets.
+            [ -n "${ALLOWED_ORIGIN:-}" ] || echo "WARNING: ALLOWED_ORIGIN unset — CORS will block the frontend"
+            {
+              printf 'PORT=%s\n' "${API_PORT:-3001}"
+              printf 'ALLOWED_ORIGIN=%s\n' "${ALLOWED_ORIGIN:-}"
+              printf 'RESEND_API_KEY=%s\n' "${RESEND_API_KEY:-}"
+              printf 'RESEND_AUDIENCE_ID=%s\n' "${RESEND_AUDIENCE_ID:-}"
+              printf 'MAIL_FROM=%s\n' "${MAIL_FROM:-}"
+              printf 'SITE_URL=%s\n' "${SITE_URL:-}"
+              printf 'SITE_NAME=%s\n' "${SITE_NAME:-}"
+            } > apps/api/.env
+            chmod 600 apps/api/.env
+
+            corepack enable
+            pnpm install --frozen-lockfile
+            pnpm turbo build --filter=@repo/api...
+
+            pm2 startOrReload apps/api/ecosystem.config.js --update-env
+            pm2 save
+
+            sleep 3
+            curl -fsS http://localhost:3001/health >/dev/null
+            echo "health check OK"

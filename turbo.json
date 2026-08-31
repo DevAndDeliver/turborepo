@@ -1,0 +1,59 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "NODE_ENV",
+        "CONTENTFUL_SPACE_ID",
+        "CONTENTFUL_ACCESS_TOKEN",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_SITE_URL",
+        "NEXT_PUBLIC_CONTACT_EMAIL",
+        "NEXT_PUBLIC_CAL_URL",
+        "NEXT_PUBLIC_CAL_LINK",
+        "NEXT_PUBLIC_GITHUB_URL"
+      ]
+    },
+    "dev": {
+      // Build the shared packages before starting any watcher. Without this,
+      // `pnpm dev` on a fresh clone races: apps/api's compiler starts before
+      // @repo/types has emitted dist/, and the first thing a new user sees is
+      // "Cannot find module '@repo/types'". It recovers on its own, but it
+      // reads like a broken checkout.
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "NODE_ENV",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_SITE_URL",
+        "NEXT_PUBLIC_CONTACT_EMAIL",
+        "NEXT_PUBLIC_CAL_URL",
+        "NEXT_PUBLIC_CAL_LINK",
+        "NEXT_PUBLIC_GITHUB_URL",
+        "DATABASE_URL",
+        "CONTENTFUL_SPACE_ID",
+        "CONTENTFUL_ACCESS_TOKEN",
+        "RESEND_API_KEY",
+        "RESEND_AUDIENCE_ID",
+        "ALLOWED_ORIGIN",
+        "PORT"
+      ]
+    },
+    "lint": {},
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "env": ["CONTENTFUL_SPACE_ID", "CONTENTFUL_ACCESS_TOKEN"]
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

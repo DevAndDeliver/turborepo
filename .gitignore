@@ -1,0 +1,47 @@
+# dependencies
+node_modules
+
+# turbo
+.turbo
+
+# build outputs
+dist
+.next
+out
+
+# env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editors
+.vscode
+.idea
+*.swp
+*.swo
+
+# local agent tooling
+.claude/
+.gstack/
+
+# in case someone runs yarn/npm out of habit after the pnpm migration
+.yarn/
+package-lock.json
+
+# Oracle OCIDs for the capacity retry script (machine-specific).
+# Copy deploy/oracle-retry.env.example instead.
+deploy/oracle-retry.env
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Internal article drafts — never ship with the public starter.
+# They live on the private main branch; this guard stops a merge from main
+# reintroducing them here.
+/articles/
