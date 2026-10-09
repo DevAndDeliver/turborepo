@@ -89,6 +89,15 @@ const DEFAULT_ARTICLES: ArticleTeaserContent[] = [
     published: false,
     order: 6,
   },
+  {
+    number: "07",
+    title: "Upgrading to NestJS 12 and TypeScript 6",
+    excerpt:
+      "What the upgrade broke, the six manual fixes it needed, and benchmarks on Node 22, 24 and 26 — including a rate-limiter false alarm.",
+    href: "https://devanddeliver.com/blog",
+    published: false,
+    order: 7,
+  },
 ];
 
 async function fetchEntries<T>(contentType: string): Promise<T[]> {

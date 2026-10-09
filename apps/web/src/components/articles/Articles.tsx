@@ -13,8 +13,8 @@ export function Articles({ articles }: ArticlesProps) {
         <SectionHeading index="02" label="The series" title="How we built this." />
         <div data-animate="" className="mb-16">
           <p className="mt-4 text-zinc-400 font-light leading-relaxed max-w-[55ch]">
-            Six articles documenting the real process — from repo structure to deployment. Published
-            on{" "}
+            Seven articles documenting the real process — from repo structure to deployment and
+            upgrades. Published on{" "}
             <a
               href="https://devanddeliver.com/blog"
               className="text-zinc-300 underline underline-offset-2 hover:text-zinc-50 transition-colors duration-200"
