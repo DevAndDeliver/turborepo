@@ -40,8 +40,8 @@ const DEFAULT_ARTICLES: ArticleTeaserContent[] = [
     title: "Turborepo setup — why monorepo, structure, shared packages",
     excerpt:
       "Why we chose a monorepo, how we structured it, and which tradeoffs we made on shared packages. All decisions explained.",
-    href: "https://devanddeliver.com/blog",
-    published: false,
+    href: "https://devanddeliver.com/blog/development/how-to-structure-a-full-stack-type-script-monorepo-next-js-nest-js-turborepo",
+    published: true,
     order: 1,
   },
   {
@@ -49,8 +49,8 @@ const DEFAULT_ARTICLES: ArticleTeaserContent[] = [
     title: "Building a landing page with Next.js 16, Tailwind v4, and Framer Motion",
     excerpt:
       "A full design and build session: from brainstorming the visual language to shipping a production-quality page with shared UI components.",
-    href: "https://devanddeliver.com/blog",
-    published: false,
+    href: "https://devanddeliver.com/blog/development/building-a-landing-page-with-next-js-16-tailwind-v4-and-framer-motion",
+    published: true,
     order: 2,
   },
   {
@@ -58,8 +58,8 @@ const DEFAULT_ARTICLES: ArticleTeaserContent[] = [
     title: "Wiring to Contentful — headless CMS for static content",
     excerpt:
       "How we connected the landing page to Contentful so non-developers can update copy without touching code.",
-    href: "https://devanddeliver.com/blog",
-    published: false,
+    href: "https://devanddeliver.com/blog/development/wiring-a-next-js-landing-page-to-contentful-without-the-sdk",
+    published: true,
     order: 3,
   },
   {
@@ -67,8 +67,8 @@ const DEFAULT_ARTICLES: ArticleTeaserContent[] = [
     title: "Embedding a self-hosted Cal.diy calendar in the App Router",
     excerpt:
       "A real booking flow on the page without an npm SDK — the iframe embed, the CSP rules it needs, and the parts that get weird.",
-    href: "https://devanddeliver.com/blog",
-    published: false,
+    href: "https://devanddeliver.com/blog/development/embedding-a-self-hosted-cal-diy-calendar-in-the-next-js-app-router",
+    published: true,
     order: 4,
   },
   {
@@ -76,8 +76,8 @@ const DEFAULT_ARTICLES: ArticleTeaserContent[] = [
     title: "Deploying to Vercel and Railway",
     excerpt:
       "Putting both apps live — Vercel for Next.js, Railway for NestJS. Environment variables, CI, and the first real domain.",
-    href: "https://devanddeliver.com/blog",
-    published: false,
+    href: "https://devanddeliver.com/blog/development/deploying-a-turborepo-monorepo-nest-js-to-railway-next-js-to-vercel",
+    published: true,
     order: 5,
   },
   {
@@ -85,8 +85,8 @@ const DEFAULT_ARTICLES: ArticleTeaserContent[] = [
     title: "Moving the API to a free Oracle Cloud VPS",
     excerpt:
       "When the Railway credit ran out: the Arm capacity lottery, Caddy and PM2, and a GitHub Actions deploy that survives a reboot.",
-    href: "https://devanddeliver.com/blog",
-    published: false,
+    href: "https://devanddeliver.com/blog/development/how-to-deploy-a-nest-js-api-to-a-free-oracle-cloud-vps-arm-caddy-pm-2",
+    published: true,
     order: 6,
   },
   {
