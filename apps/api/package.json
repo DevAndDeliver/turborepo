@@ -12,11 +12,11 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@nestjs/common": "^11.1.27",
-    "@nestjs/core": "^11.1.27",
-    "@nestjs/platform-express": "^11.1.27",
-    "@nestjs/swagger": "^11.4.4",
-    "@nestjs/throttler": "^6.5.0",
+    "@nestjs/common": "^12.0.0",
+    "@nestjs/core": "^12.0.0",
+    "@nestjs/platform-express": "^12.0.0",
+    "@nestjs/swagger": "^12.0.0",
+    "@nestjs/throttler": "^6.7.1",
     "@repo/types": "workspace:*",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
@@ -27,9 +27,9 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.0",
-    "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.1.27",
+    "@nestjs/cli": "^12.0.0",
+    "@nestjs/schematics": "^12.0.0",
+    "@nestjs/testing": "^12.0.0",
     "@repo/config": "workspace:*",
     "@types/express": "^5.0.0",
     "@types/node": "^20",
